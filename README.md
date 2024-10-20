@@ -1,4 +1,5 @@
-Overview
+**Overview:**
+
 This project demonstrates how to fine-tune a pre-trained transformer model, specifically distilbert-base-uncased, for text classification using the IMDB dataset. The task is to classify movie reviews into two categories: Positive and Negative. Additionally, the fine-tuning process is accelerated by leveraging LoRA (Low-Rank Adaptation), a parameter-efficient transfer learning method, using the peft library.
 
 The project covers the following steps:
@@ -10,52 +11,26 @@ Applying LoRA for efficient fine-tuning
 Training and evaluating the model
 Making predictions on unseen examples.
 Dependencies
-Install the required libraries using the following commands:
 
-bash
-Copy code
-!pip install datasets
-!pip install peft
-!pip install evaluate
-You will also need the following libraries from transformers:
-
-python
-Copy code
-from datasets import load_dataset, DatasetDict, Dataset
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, DataCollatorWithPadding, TrainingArguments, Trainer
-from peft import PeftModel, PeftConfig, get_peft_model, LoraConfig
-import torch
-import numpy as np
-import evaluate
-Dataset
+**Dataset:**
 The dataset used is a truncated version of the IMDB Movie Reviews dataset, which contains 50,000 movie reviews split evenly between positive and negative sentiment.
 
-Dataset Source: shawhin/imdb-truncated from the Hugging Face Hub.
 Labels:
 0: Negative
 1: Positive
 You can load the dataset as follows:
 
-python
-Copy code
-dataset = load_dataset('shawhin/imdb-truncated')
-Model
+**Model:**
 We use the distilbert-base-uncased model, which is a smaller and faster version of BERT. For text classification, we modify the output head to predict two classes: Positive and Negative.
 
 LoRA (Low-Rank Adaptation) is applied to fine-tune only certain layers of the model, reducing the number of trainable parameters and making the training process more efficient. The target modules include parts of the attention mechanism (q_lin).
 
-Tokenization
+**Tokenization:**
 We use the AutoTokenizer from Hugging Face's transformers library. If the tokenizer does not have a pad token, we add one.
 
 The tokenize_function truncates the input text to a maximum of 512 tokens and tokenizes it:
 
-python
-Copy code
-def tokenize_function(examples):
-    text = examples["text"]
-    tokenizer.truncation_side = "left"
-    tokenized_inputs = tokenizer(text, return_tensors="np", truncation=True, max_length=512)
-    return tokenized_inputs
+
 LoRA Configuration
 The LoRA configuration is set up as follows:
 
